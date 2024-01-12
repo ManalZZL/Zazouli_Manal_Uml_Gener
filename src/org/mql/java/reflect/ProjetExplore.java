@@ -1,12 +1,16 @@
 package org.mql.java.reflect;
 
 import java.io.File;
+import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Parameter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,6 +19,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
+//Classe principale pour explorer un projet Java et extraire des informations sur les classes, interfaces, etc.
 public class ProjetExplore {
 	public File project;
 	private List<Class<?>> loadedFiles;
@@ -24,7 +29,7 @@ public class ProjetExplore {
 	private List<Class<?>> loadEnuml;
 	private URLClassLoader classloader;
 	public Map<String, Set<Class<?>>> packageslist = new HashMap<>();
-	
+
 	public ProjetExplore(String projectPathBin) throws ClassNotFoundException, MalformedURLException {
 		project = new File(projectPathBin);
 		if ((project.exists() || project.isDirectory())) {
@@ -43,10 +48,12 @@ public class ProjetExplore {
 
 	private void exploreFile() throws ClassNotFoundException {
 		explorer(this.project);
-		 explorerPack(this.project);
-		
+		explorerPack(this.project);
+
 	}
 
+	// Explore les fichiers récursivement pour trouver les fichiers de classe
+	// (.class)
 	private void explorer(File file) throws ClassNotFoundException {
 		File[] content = file.listFiles();
 		for (File suf : content) {
@@ -58,28 +65,29 @@ public class ProjetExplore {
 			}
 		}
 	}
-	
 
-    private void explorerPack(File file) throws ClassNotFoundException {
-        List<Package> packageList = this.getLoadedPackages();
-        for (Package pkg : packageList) {
-            packageslist.put(pkg.getName(), new HashSet<>());
-        }
-        for (Class<?> clazz : loadedFiles) {
-            Package classPackage = clazz.getPackage();
-            if (classPackage != null) {
-                String packageName = classPackage.getName();
-                packageslist.get(packageName).add(clazz);
-            }
-        }
-    }
+	// Explore les fichiers pour détecter les packages et les associer aux classes
+	private void explorerPack(File file) throws ClassNotFoundException {
+		List<Package> packageList = this.getLoadedPackages();
+		for (Package pkg : packageList) {
+			packageslist.put(pkg.getName(), new HashSet<>());
+		}
+		for (Class<?> clazz : loadedFiles) {
+			Package classPackage = clazz.getPackage();
+			if (classPackage != null) {
+				String packageName = classPackage.getName();
+				packageslist.get(packageName).add(clazz);
+			}
+		}
+	}
 
-		
-
+	// Charge une classe à partir de son nom qualifié
 	private void loadClass(String qName) throws ClassNotFoundException {
 		loadedFiles.add(classloader.loadClass(qName));
 	}
 
+	// Filtre les fichiers en fonction de leur type (classe, interface, énumération,
+	// annotation)
 	private void filtrer(String qName) {
 		List<Class<?>> classList = this.getfiles();
 		for (Class<?> clss : classList) {
@@ -95,7 +103,8 @@ public class ProjetExplore {
 		}
 	}
 
-	public String getQName(String path) {
+	// Obtient le nom qualifié d'une classe à partir de son chemin absolu
+	private String getQName(String path) {
 		int ir = path.lastIndexOf(".class");
 		path = path.substring(0, ir);
 		path = path.replace(project.getAbsolutePath(), "");
@@ -106,35 +115,49 @@ public class ProjetExplore {
 		return path;
 	}
 
+// Getter pour tous les fichiers chargés
 	public List<Class<?>> getfiles() {
 		return loadedFiles;
 	}
 
+	// Getter pour les classes
 	public List<Class<?>> getClasse() {
 		return loaAClasse;
 	}
 
+	// Getter pour les annotations
 	public List<Class<?>> getAnnotation() {
 		return loaAnnotation;
 	}
 
+	// Getter pour les interfaces
 	public List<Class<?>> getInterface() {
 		return loaInterface;
 	}
 
+	// Getter pour les énumérations
 	public List<Class<?>> getEnum() {
 		return loadEnuml;
 	}
 
+	// Getter pour les packages associés aux classes
+	public Map<String, Set<Class<?>>> getPack() {
+		return packageslist;
+	}
+
+	// Getter pour les packages chargés par le classloader
 	public List<Package> getLoadedPackages() {
 		List<Package> loadedPackages = new Vector<Package>();
 		Collections.addAll(loadedPackages, classloader.getDefinedPackages());
 		return loadedPackages;
 	}
 
+	// Getter pour le classloader
 	public URLClassLoader getClassloader() {
 		return classloader;
 	}
+
+	// Affiche les noms chargées
 
 	public void getClasses() {
 		List<Class<?>> classList = this.getClasse();
@@ -192,51 +215,99 @@ public class ProjetExplore {
 		}
 	}
 
+	// Extrait et affiche les relations entre les classes (agrégation, composition,
+	// héritage, implémentation)
 	
-	
-	
-	
-	/*public void extraireRelations() {
-	    List<Class<?>> classList = this.getfiles();
+	/* public void extractRelations() {
+		List<Class<?>> classList = this.getClasse();
+
+		for (Class<?> clazz : classList) {
+			System.out.println("*-*-*-**--*-*-*-*-**-*-*-*-*-*-**--*-**-*-*---*-");
+			System.out.println("Les relation de la classe  : " + clazz.getSimpleName());
+
+			// Aggregation ou Composition
+			
+			 * Constructor<?> constructeur[] = clazz.getDeclaredConstructors(); for
+			 * (Constructor<?> cns : constructeur) { Parameter[] parameters =
+			 * cns.getParameters(); for (Parameter prm : parameters) { Class<?> paramType
+			 * =prm.getType(); if (!paramType.isPrimitive() &&
+			 * !paramType.equals(String.class) && !paramType.equals(Object.class)) {
+			 * System.out.println("        Composes: " + paramType.getSimpleName()); }
+			
+
+			Field[] fields = clazz.getDeclaredFields();
+			for (Field field : fields) {
+				Class<?> fieldType = field.getType();
+				System.out.println(
+						"    a une propriete de type : " + fieldType.getName() + " - Name: " + field.getName());
+
+				// Vérifie s'il s'agit d'une relation d'agrégation ou de composition
+				if (!fieldType.isPrimitive() && !fieldType.equals(String.class) && !fieldType.equals(Object.class)) {
+					if (Collection.class.isAssignableFrom(fieldType) || fieldType.isArray()) {
+						System.out.println("        Aggregates: " + fieldType.getSimpleName());
+					} else {
+						System.out.println("        Composes: " + fieldType.getSimpleName());
+					}
+				}
+			}
+
+			// superclass
+			Class<?> superClass = clazz.getSuperclass();
+			//exclure les classes héritées du package java.
+			if (superClass != null && !superClass.getName().startsWith("java.")) {
+				System.out.println("    herite de la class: " + superClass.getName());
+			}
+
+			// interfaces
+			Class<?>[] interfaces = clazz.getInterfaces();
+			for (Class<?> iface : interfaces) {
+				System.out.println("    Implemente l' interface: " + iface.getName());
+			}
+
+			System.out.println();
+		}
+	}
+	*/
+	public Map<String, List<String>> extractRelations() {
+	    Map<String, List<String>> classRelations = new HashMap<>();
+
+	    List<Class<?>> classList = this.getClasse();
 
 	    for (Class<?> clazz : classList) {
-	        System.out.println("Relations pour la classe : " + clazz.getName());
+	        List<String> relations = new ArrayList<>();
 
-	        // Interfaces 
-	        Class<?>[] interfaces = clazz.getInterfaces();
-	        for (Class<?> interf : interfaces) {
-	            System.out.println("    Implémente l'interface : " + interf.getName());
-	        }
-
-	        // Classe mère 
-	        Class<?> superClass = clazz.getSuperclass();
-	        if (superClass != null) {
-	            System.out.println("    Hérite de la classe : " + superClass.getName());
-	        }
-
-	        // champs
+	        // Aggregation or Composition
 	        Field[] fields = clazz.getDeclaredFields();
 	        for (Field field : fields) {
 	            Class<?> fieldType = field.getType();
-	            System.out.println("    A le champ de type : " + fieldType.getName() + " - Nom : " + field.getName());
-	        }
 
-	        //  les méthodes
-	        Method[] methods = clazz.getDeclaredMethods();
-	        for (Method method : methods) {
-	            Class<?> returnType = method.getReturnType();
-	            System.out.println("    A la méthode : " + method.getName() + " - Retourne : " + returnType.getName());
-
-	            // Paramètres de la méthode
-	            Class<?>[] paramTypes = method.getParameterTypes();
-	            for (Class<?> paramType : paramTypes) {
-	                System.out.println("        Paramètre : " + paramType.getName());
+	            // Check if it's a relation of aggregation or composition
+	            if (!fieldType.isPrimitive() && !fieldType.equals(String.class) && !fieldType.equals(Object.class)) {
+	                if (Collection.class.isAssignableFrom(fieldType) || fieldType.isArray()) {
+	                    relations.add("Aggregates: " + fieldType.getSimpleName());
+	                } else {
+	                    relations.add("Composes: " + fieldType.getSimpleName());
+	                }
 	            }
 	        }
 
-	        System.out.println();
+	        // Superclass
+	        Class<?> superClass = clazz.getSuperclass();
+	        // Exclude classes inherited from the java package
+	        if (superClass != null && !superClass.getName().startsWith("java.")) {
+	            relations.add("Inherits from: " + superClass.getSimpleName());
+	        }
+
+	        // Interfaces
+	        Class<?>[] interfaces = clazz.getInterfaces();
+	        for (Class<?> iface : interfaces) {
+	            relations.add("Implements: " + iface.getSimpleName());
+	            
+	        }
+
+	        classRelations.put(clazz.getSimpleName(), relations);
 	    }
-	}*/
 
-
+	    return classRelations;
+	}
 }
