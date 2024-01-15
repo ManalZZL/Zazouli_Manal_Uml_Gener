@@ -8,6 +8,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,8 +22,9 @@ import javax.xml.transform.stream.StreamResult;
 
 public class XMLGenerator {
 
-    public static void generateXML(Map<String, Set<Class<?>>> packages, Map<String, List<String>> classRelations, String outputPath) {
-        try {
+	public static void generateXML(Map<String, Set<Class<?>>> packages, Map<String, List<String>> classRelations,
+			String outputPath) {
+		try {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             Document document = documentBuilder.newDocument();
@@ -37,63 +40,83 @@ public class XMLGenerator {
                 packageNameElement.appendChild(document.createTextNode(entry.getKey()));
                 packageElement.appendChild(packageNameElement);
 
-                Set<Class<?>> classes = entry.getValue();
-                for (Class<?> clazz : classes) {
-                	if(clazz.isAnnotation()) {
-                		   Element classElement = document.createElement("annotaion");
-                           packageElement.appendChild(classElement);
-                           Element classNameElement = document.createElement("name");
-                           classNameElement.appendChild(document.createTextNode(clazz.getSimpleName()));
-                           classElement.appendChild(classNameElement);
+               
 
-                	}
-                	else if(clazz.isInterface()) {
-                		 Element classElement = document.createElement("interface");
-                         packageElement.appendChild(classElement);
-                         Element classNameElement = document.createElement("name");
-                         classNameElement.appendChild(document.createTextNode(clazz.getSimpleName()));
-                         classElement.appendChild(classNameElement);
+				Set<Class<?>> classes = entry.getValue();
+				for (Class<?> clazz : classes) {
+					 
+					if (clazz.isAnnotation()) {
+						Element classElement = document.createElement("annotaion");
+						packageElement.appendChild(classElement);
+						Element classNameElement = document.createElement("name");
+						classNameElement.appendChild(document.createTextNode(clazz.getSimpleName()));
+						classElement.appendChild(classNameElement);
+					
+					} else if (clazz.isInterface()) {
+						Element classElement = document.createElement("interface");
+						packageElement.appendChild(classElement);
+						Element classNameElement = document.createElement("name");
+						classNameElement.appendChild(document.createTextNode(clazz.getSimpleName()));
+						classElement.appendChild(classNameElement);
 
-                	}else if(clazz.isEnum()) {
-               		 Element classElement = document.createElement("Enum");
-                     packageElement.appendChild(classElement);
-                     Element classNameElement = document.createElement("name");
-                     classNameElement.appendChild(document.createTextNode(clazz.getSimpleName()));
-                     classElement.appendChild(classNameElement);
+					} else if (clazz.isEnum()) {
+						Element classElement = document.createElement("Enum");
+						packageElement.appendChild(classElement);
+						Element classNameElement = document.createElement("name");
+						classNameElement.appendChild(document.createTextNode(clazz.getSimpleName()));
+						classElement.appendChild(classNameElement);
 
-            	}else {
-                    Element classElement = document.createElement("class");
-                    packageElement.appendChild(classElement);
+					} else {
+						Element classElement = document.createElement("class");
+						packageElement.appendChild(classElement);
 
-                    Element classNameElement = document.createElement("name");
-                    classNameElement.appendChild(document.createTextNode(clazz.getSimpleName()));
-                    classElement.appendChild(classNameElement);
+						Element classNameElement = document.createElement("name");
+						classNameElement.appendChild(document.createTextNode(clazz.getSimpleName()));
+						classElement.appendChild(classNameElement);
 
-                    List<String> relations = classRelations.get(clazz.getSimpleName());
-                    if (relations != null && !relations.isEmpty()) {
-                        Element relationsElement = document.createElement("relations");
-                        classElement.appendChild(relationsElement);
+						Element fieldsElement = document.createElement("fields");
+						classElement.appendChild(fieldsElement);
+						Field[] fields = clazz.getDeclaredFields();
+						for (Field field : fields) {
+						    // Créer un élément pour le modificateur du champ
+						    Element modifierElement = document.createElement("fieldModifier");
+						    modifierElement.appendChild(document.createTextNode(Modifier.toString(field.getModifiers())));
 
-                        for (String relation : relations) {
-                            Element relationElement = document.createElement("relation");
-                            relationElement.appendChild(document.createTextNode(relation));
-                            relationsElement.appendChild(relationElement);
-                        }
-                    }
-                }
-                }
-                }
+						    // Créer un élément pour le nom du champ
+						    Element fieldNameElement = document.createElement("fieldName");
+						    fieldNameElement.appendChild(document.createTextNode(field.getName()));
 
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
-            DOMSource source = new DOMSource(document);
-            StreamResult result = new StreamResult(new File(outputPath));
+						    // Ajouter les éléments au parent (fieldsElement)
+						    fieldsElement.appendChild(modifierElement);
+						    fieldsElement.appendChild(fieldNameElement);
+						}
+						
+						
+						List<String> relations = classRelations.get(clazz.getSimpleName());
+	                    if (relations != null && !relations.isEmpty()) {
+	                        Element relationsElement = document.createElement("relations");
+	                        classElement.appendChild(relationsElement);
 
-            transformer.transform(source, result);
-            System.out.println("XML généré!");
+	                        for (String relation : relations) {
+	                            Element relationElement = document.createElement("relation");
+	                            relationElement.appendChild(document.createTextNode(relation));
+	                            relationsElement.appendChild(relationElement);
+	                        }
+	                    }
+					}
+				}
+			}
 
-        } catch (ParserConfigurationException | TransformerException e) {
-            e.printStackTrace();
-        }
-    }
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			DOMSource source = new DOMSource(document);
+			StreamResult result = new StreamResult(new File(outputPath));
+
+			transformer.transform(source, result);
+			System.out.println("XML généré!");
+
+		} catch (ParserConfigurationException | TransformerException e) {
+			e.printStackTrace();
+		}
+	}
 }

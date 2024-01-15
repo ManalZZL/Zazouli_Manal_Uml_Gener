@@ -26,6 +26,7 @@ public class PackageExplore {
 		this.name = name;
 	}
 
+	
 	// Explore les packages de classes et extrait des informations
 	public void exploreClassPackages() {
 		List<Class<?>> classList = projetExplore.getfiles();

@@ -1,11 +1,13 @@
 package org.mql.java;
 
+import java.util.List;
 
-
+import org.mql.java.models.PackageModel;
 import org.mql.java.reflect.ClasseExplore;
 import org.mql.java.reflect.PackageExplore;
 import org.mql.java.reflect.ProjetExplore;
 import org.mql.java.xml.XMLGenerator;
+import org.mql.java.xml.XMLParser;
 
 public class Examples {
 
@@ -15,19 +17,28 @@ public class Examples {
 
 	void exp01() {
 		try {
+			
 			ProjetExplore prj = new ProjetExplore("C:\\Users\\th\\eclipse-workspace\\workM1\\jUnit2\\bin");
-			PackageExplore pck = new PackageExplore(prj,"org.mql.java.generic");
+			PackageExplore pck = new PackageExplore(prj, "org.mql.java.generic");
 			ClasseExplore cls = new ClasseExplore(prj);
-			XMLGenerator.generateXML(prj.getPack(), prj.extractRelations(), "C:\\Users\\th\\eclipse-workspace\\workM1\\Zazouli Manal - UmlDiagGener\\src\\output.xml");
-//prj.extractRelations();;
+			XMLGenerator.generateXML(prj.getPack(), prj.extractRelations(),"C:\\Users\\th\\eclipse-workspace\\workM1\\Zazouli Manal - UmlDiagGener\\resources\\output.xml");
+			List<PackageModel> dataModel = XMLParser.parseXML("C:\\Users\\th\\eclipse-workspace\\workM1\\Zazouli Manal - UmlDiagGener\\resources\\output.xml");
+		    XMLParser.displayModel(dataModel);
+		    
+		    
+		    
+			// XMLParser.parseXML("C:\\Users\\th\\eclipse-workspace\\workM1\\Zazouli Manal -
+			// UmlDiagGener\\src\\datapers.xml");
+//			 System.out.println( prj.extractRelations());
+//
 //			System.out.println("**********************");
-//			System.out.println(pck.getName());
+//		    System.out.println(pck.getName());
 //			System.out.println("**********************");
-//			cls.showClasses();
+//		    cls.showClasses();
 //			System.out.println("**********************");
 //			System.out.println(cls.getClasses());
 //			System.out.println("**********************");
-//			//pck.explorePackages();
+//			pck.explorPackages();
 //			System.out.println("**********************");
 //			System.out.println("pack name ::::" + pck.getPackageNames());
 //			System.out.println("****************");
@@ -50,7 +61,6 @@ public class Examples {
 //                }
 //                System.out.println();
 //            }
-            
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

@@ -66,6 +66,13 @@ public class ProjetExplore {
 		}
 	}
 
+	// Charge une classe à partir de son nom qualifié
+		private void loadClass(String qName) throws ClassNotFoundException {
+			loadedFiles.add(classloader.loadClass(qName));
+		}
+		
+		
+	
 	// Explore les fichiers pour détecter les packages et les associer aux classes
 	private void explorerPack(File file) throws ClassNotFoundException {
 		List<Package> packageList = this.getLoadedPackages();
@@ -81,10 +88,13 @@ public class ProjetExplore {
 		}
 	}
 
-	// Charge une classe à partir de son nom qualifié
-	private void loadClass(String qName) throws ClassNotFoundException {
-		loadedFiles.add(classloader.loadClass(qName));
-	}
+	
+	// Getter pour les packages chargés par le classloader
+				public List<Package> getLoadedPackages() {
+					List<Package> loadedPackages = new Vector<Package>();
+					Collections.addAll(loadedPackages, classloader.getDefinedPackages());
+					return loadedPackages;
+				}
 
 	// Filtre les fichiers en fonction de leur type (classe, interface, énumération,
 	// annotation)
@@ -145,13 +155,7 @@ public class ProjetExplore {
 		return packageslist;
 	}
 
-	// Getter pour les packages chargés par le classloader
-	public List<Package> getLoadedPackages() {
-		List<Package> loadedPackages = new Vector<Package>();
-		Collections.addAll(loadedPackages, classloader.getDefinedPackages());
-		return loadedPackages;
-	}
-
+	
 	// Getter pour le classloader
 	public URLClassLoader getClassloader() {
 		return classloader;
@@ -281,21 +285,21 @@ public class ProjetExplore {
 	        for (Field field : fields) {
 	            Class<?> fieldType = field.getType();
 
-	            // Check if it's a relation of aggregation or composition
+	           // aggregation ou composition
 	            if (!fieldType.isPrimitive() && !fieldType.equals(String.class) && !fieldType.equals(Object.class)) {
 	                if (Collection.class.isAssignableFrom(fieldType) || fieldType.isArray()) {
-	                    relations.add("Aggregates: " + fieldType.getSimpleName());
+	                    relations.add("Aggregates:------<> " + fieldType.getSimpleName());
 	                } else {
-	                    relations.add("Composes: " + fieldType.getSimpleName());
+	                    relations.add("Composes: -------<" + fieldType.getSimpleName()+">");
 	                }
 	            }
 	        }
 
 	        // Superclass
 	        Class<?> superClass = clazz.getSuperclass();
-	        // Exclude classes inherited from the java package
+	      
 	        if (superClass != null && !superClass.getName().startsWith("java.")) {
-	            relations.add("Inherits from: " + superClass.getSimpleName());
+	            relations.add("extends: " + superClass.getSimpleName());
 	        }
 
 	        // Interfaces

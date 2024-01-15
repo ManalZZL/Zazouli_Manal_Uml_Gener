@@ -1,50 +1,44 @@
 package org.mql.java.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import java.util.Vector;
-
-import org.mql.java.reflect.PackageExplore;
 
 public class PackageModel {
 
-	private String name;
+    private String name;
+    private List<ClasseModel> classes;
 
-	private List<PackageModel> packages;
+    public PackageModel(String name) {
+    	this.classes = new ArrayList<>(); 
+    	this.name = name;
+    }
 
-	private List<Object> classes;
+    public PackageModel(String name, List<ClasseModel> classes) {
+        this(name);
+        this.classes = classes;
+    }
 
-	public PackageModel(PackageExplore pkg) {
-		name = pkg.getName();
-		packages = new Vector<PackageModel>();
+    public String getName() {
+        return name;
+    }
+
+    public List<ClasseModel> getClasses() {
+        return classes;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setClasses(List<ClasseModel> classes) {
+        this.classes = classes;
+    }
+
+	public void addClass(ClasseModel classeModel) {
+		classes.add(classeModel);
+		
 	}
 
-	public List<PackageModel> getPackages() {
-		return packages;
-	}
-
-	public void setPackages(List<PackageModel> packages) {
-		this.packages = packages;
-	}
-
-	public List<Object> getClasses() {
-		return classes;
-	}
-
-	public void setClasses(List<Object> classes) {
-		this.classes = classes;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void addPackage(PackageModel pack) {
-		packages.add(pack);
-	}
-
-	public void addClass(ClasseModel classe) {
-		classes.add(classe);
-	}
-
+   
 }
