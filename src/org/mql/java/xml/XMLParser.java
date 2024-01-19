@@ -62,12 +62,71 @@ public class XMLParser {
 									}
 								}
 							}
-							// ***il reste la partie des relations****
+							// les infos des propriétés
+							List<String> methods = new ArrayList<>();
+							NodeList methodNodes = classElement.getElementsByTagName("methods");
+							if (methodNodes.getLength() > 0) {
+								Element methodElement = (Element) methodNodes.item(0);
+								NodeList methodNameNodes = methodElement.getElementsByTagName("methodName");
+
+								for (int k = 0; k < methodNameNodes.getLength(); k++) {
+									Node methodNameNode = methodNameNodes.item(k);
+									if (methodNameNode.getNodeType() == Node.ELEMENT_NODE) {
+										String metName = methodNameNode.getTextContent();
+										methods.add(metName);
+									}
+								}
+							}
+
+							List<String> relations = new ArrayList<>();
+							NodeList relationNodes = classElement.getElementsByTagName("relations");
+							if (relationNodes.getLength() > 0) {
+								Element relationElement = (Element) relationNodes.item(0);
+								// composition
+								NodeList compositionNodes = relationElement.getElementsByTagName("composition");
+								for (int k = 0; k < compositionNodes.getLength(); k++) {
+									Node compositionNode = compositionNodes.item(k);
+									if (compositionNode.getNodeType() == Node.ELEMENT_NODE) {
+										String compositionName = compositionNode.getTextContent();
+										relations.add("composition avec --<->" + compositionName);
+									}
+								}
+
+								// Aggregation
+								NodeList aggregationNodes = relationElement.getElementsByTagName("aggregation");
+								for (int k = 0; k < aggregationNodes.getLength(); k++) {
+									Node agregationNode = aggregationNodes.item(k);
+									if (agregationNode.getNodeType() == Node.ELEMENT_NODE) {
+										String agregationName = agregationNode.getTextContent();
+										relations.add("agregation avec -<>" + agregationName);
+									}
+								}
+								// Implementation
+								NodeList implementationNodes = relationElement.getElementsByTagName("implements");
+								for (int k = 0; k < implementationNodes.getLength(); k++) {
+									Node implNode = implementationNodes.item(k);
+									if (implNode.getNodeType() == Node.ELEMENT_NODE) {
+										String implName = implNode.getTextContent();
+										relations.add("implemente " + implName);
+									}
+								}
+								// heritage
+								NodeList heritageNodes = relationElement.getElementsByTagName("extends");
+								for (int k = 0; k < heritageNodes.getLength(); k++) {
+									Node heritNode = heritageNodes.item(k);
+									if (heritNode.getNodeType() == Node.ELEMENT_NODE) {
+										String heritName = heritNode.getTextContent();
+										relations.add("herite de " + heritName);
+									}
+								}
+							}
 
 							// creation de ClasseModel et l'ajouter à PackageModel
 							ClasseModel classeModel = new ClasseModel();
 							classeModel.setName(className);
 							classeModel.setFields(fields);
+							classeModel.setMethods(methods);
+							classeModel.setRelations(relations);
 							packageObj.addClass(classeModel);
 						}
 					}

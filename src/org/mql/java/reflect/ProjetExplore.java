@@ -67,12 +67,10 @@ public class ProjetExplore {
 	}
 
 	// Charge une classe à partir de son nom qualifié
-		private void loadClass(String qName) throws ClassNotFoundException {
-			loadedFiles.add(classloader.loadClass(qName));
-		}
-		
-		
-	
+	private void loadClass(String qName) throws ClassNotFoundException {
+		loadedFiles.add(classloader.loadClass(qName));
+	}
+
 	// Explore les fichiers pour détecter les packages et les associer aux classes
 	private void explorerPack(File file) throws ClassNotFoundException {
 		List<Package> packageList = this.getLoadedPackages();
@@ -88,13 +86,12 @@ public class ProjetExplore {
 		}
 	}
 
-	
 	// Getter pour les packages chargés par le classloader
-				public List<Package> getLoadedPackages() {
-					List<Package> loadedPackages = new Vector<Package>();
-					Collections.addAll(loadedPackages, classloader.getDefinedPackages());
-					return loadedPackages;
-				}
+	public List<Package> getLoadedPackages() {
+		List<Package> loadedPackages = new Vector<Package>();
+		Collections.addAll(loadedPackages, classloader.getDefinedPackages());
+		return loadedPackages;
+	}
 
 	// Filtre les fichiers en fonction de leur type (classe, interface, énumération,
 	// annotation)
@@ -155,7 +152,6 @@ public class ProjetExplore {
 		return packageslist;
 	}
 
-	
 	// Getter pour le classloader
 	public URLClassLoader getClassloader() {
 		return classloader;
@@ -221,97 +217,88 @@ public class ProjetExplore {
 
 	// Extrait et affiche les relations entre les classes (agrégation, composition,
 	// héritage, implémentation)
-	
-	/* public void extractRelations() {
+
+	/*
+	 * public void extractRelations() { List<Class<?>> classList = this.getClasse();
+	 * 
+	 * for (Class<?> clazz : classList) {
+	 * System.out.println("*-*-*-**--*-*-*-*-**-*-*-*-*-*-**--*-**-*-*---*-");
+	 * System.out.println("Les relation de la classe  : " + clazz.getSimpleName());
+	 * 
+	 * // Aggregation ou Composition
+	 * 
+	 * Constructor<?> constructeur[] = clazz.getDeclaredConstructors(); for
+	 * (Constructor<?> cns : constructeur) { Parameter[] parameters =
+	 * cns.getParameters(); for (Parameter prm : parameters) { Class<?> paramType
+	 * =prm.getType(); if (!paramType.isPrimitive() &&
+	 * !paramType.equals(String.class) && !paramType.equals(Object.class)) {
+	 * System.out.println("        Composes: " + paramType.getSimpleName()); }
+	 * 
+	 * 
+	 * Field[] fields = clazz.getDeclaredFields(); for (Field field : fields) {
+	 * Class<?> fieldType = field.getType(); System.out.println(
+	 * "    a une propriete de type : " + fieldType.getName() + " - Name: " +
+	 * field.getName());
+	 * 
+	 * // Vérifie s'il s'agit d'une relation d'agrégation ou de composition if
+	 * (!fieldType.isPrimitive() && !fieldType.equals(String.class) &&
+	 * !fieldType.equals(Object.class)) { if
+	 * (Collection.class.isAssignableFrom(fieldType) || fieldType.isArray()) {
+	 * System.out.println("        Aggregates: " + fieldType.getSimpleName()); }
+	 * else { System.out.println("        Composes: " + fieldType.getSimpleName());
+	 * } } }
+	 * 
+	 * // superclass Class<?> superClass = clazz.getSuperclass(); //exclure les
+	 * classes héritées du package java. if (superClass != null &&
+	 * !superClass.getName().startsWith("java.")) {
+	 * System.out.println("    herite de la class: " + superClass.getName()); }
+	 * 
+	 * // interfaces Class<?>[] interfaces = clazz.getInterfaces(); for (Class<?>
+	 * iface : interfaces) { System.out.println("    Implemente l' interface: " +
+	 * iface.getName()); }
+	 * 
+	 * System.out.println(); } }
+	 */
+	public Map<String, List<String>> extractRelations() {
+		Map<String, List<String>> classRelations = new HashMap<>();
+
 		List<Class<?>> classList = this.getClasse();
 
 		for (Class<?> clazz : classList) {
-			System.out.println("*-*-*-**--*-*-*-*-**-*-*-*-*-*-**--*-**-*-*---*-");
-			System.out.println("Les relation de la classe  : " + clazz.getSimpleName());
+			List<String> relations = new ArrayList<>();
 
-			// Aggregation ou Composition
-			
-			 * Constructor<?> constructeur[] = clazz.getDeclaredConstructors(); for
-			 * (Constructor<?> cns : constructeur) { Parameter[] parameters =
-			 * cns.getParameters(); for (Parameter prm : parameters) { Class<?> paramType
-			 * =prm.getType(); if (!paramType.isPrimitive() &&
-			 * !paramType.equals(String.class) && !paramType.equals(Object.class)) {
-			 * System.out.println("        Composes: " + paramType.getSimpleName()); }
-			
-
+			// Aggregation or Composition
 			Field[] fields = clazz.getDeclaredFields();
 			for (Field field : fields) {
 				Class<?> fieldType = field.getType();
-				System.out.println(
-						"    a une propriete de type : " + fieldType.getName() + " - Name: " + field.getName());
 
-				// Vérifie s'il s'agit d'une relation d'agrégation ou de composition
+				// aggregation ou composition
 				if (!fieldType.isPrimitive() && !fieldType.equals(String.class) && !fieldType.equals(Object.class)) {
 					if (Collection.class.isAssignableFrom(fieldType) || fieldType.isArray()) {
-						System.out.println("        Aggregates: " + fieldType.getSimpleName());
+						relations.add("Aggregates: " + fieldType.getSimpleName());
 					} else {
-						System.out.println("        Composes: " + fieldType.getSimpleName());
+						relations.add("Composes: " + fieldType.getSimpleName());
 					}
 				}
 			}
 
-			// superclass
+			// Superclass
 			Class<?> superClass = clazz.getSuperclass();
-			//exclure les classes héritées du package java.
+
 			if (superClass != null && !superClass.getName().startsWith("java.")) {
-				System.out.println("    herite de la class: " + superClass.getName());
+				relations.add("extends: " + superClass.getSimpleName());
 			}
 
-			// interfaces
+			// Interfaces
 			Class<?>[] interfaces = clazz.getInterfaces();
 			for (Class<?> iface : interfaces) {
-				System.out.println("    Implemente l' interface: " + iface.getName());
+				relations.add("Implements: " + iface.getSimpleName());
+
 			}
 
-			System.out.println();
+			classRelations.put(clazz.getSimpleName(), relations);
 		}
-	}
-	*/
-	public Map<String, List<String>> extractRelations() {
-	    Map<String, List<String>> classRelations = new HashMap<>();
 
-	    List<Class<?>> classList = this.getClasse();
-
-	    for (Class<?> clazz : classList) {
-	        List<String> relations = new ArrayList<>();
-
-	        // Aggregation or Composition
-	        Field[] fields = clazz.getDeclaredFields();
-	        for (Field field : fields) {
-	            Class<?> fieldType = field.getType();
-
-	           // aggregation ou composition
-	            if (!fieldType.isPrimitive() && !fieldType.equals(String.class) && !fieldType.equals(Object.class)) {
-	                if (Collection.class.isAssignableFrom(fieldType) || fieldType.isArray()) {
-	                    relations.add("Aggregates:------<> " + fieldType.getSimpleName());
-	                } else {
-	                    relations.add("Composes: -------<" + fieldType.getSimpleName()+">");
-	                }
-	            }
-	        }
-
-	        // Superclass
-	        Class<?> superClass = clazz.getSuperclass();
-	      
-	        if (superClass != null && !superClass.getName().startsWith("java.")) {
-	            relations.add("extends: " + superClass.getSimpleName());
-	        }
-
-	        // Interfaces
-	        Class<?>[] interfaces = clazz.getInterfaces();
-	        for (Class<?> iface : interfaces) {
-	            relations.add("Implements: " + iface.getSimpleName());
-	            
-	        }
-
-	        classRelations.put(clazz.getSimpleName(), relations);
-	    }
-
-	    return classRelations;
+		return classRelations;
 	}
 }
