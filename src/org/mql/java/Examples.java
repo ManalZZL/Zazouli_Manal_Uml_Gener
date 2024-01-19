@@ -76,12 +76,9 @@ public class Examples {
 
 		DiagrammeDOM diagrammeDOM = new DiagrammeDOM();
 		DiagrammePackage pc = new DiagrammePackage();
-		// JScrollPane scrollPane =
-		// pc.parse("C:\\Users\\th\\eclipse-workspace\\workM1\\Zazouli Manal -
-		// UmlDiagGener\\resources\\output.xml");
+		//JScrollPane scrollPane = pc.parse("C:\\Users\\th\\eclipse-workspace\\workM1\\Zazouli Manal - UmlDiagGener\\resources\\output.xml");
 
-		JScrollPane scrollPane = diagrammeDOM
-				.parse("C:\\Users\\th\\eclipse-workspace\\workM1\\Zazouli Manal - UmlDiagGener\\resources\\output.xml");
+		JScrollPane scrollPane = diagrammeDOM.parse("C:\\Users\\th\\eclipse-workspace\\workM1\\Zazouli Manal - UmlDiagGener\\resources\\output.xml");
 
 		JFrame frame = new JFrame("Diagramme");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

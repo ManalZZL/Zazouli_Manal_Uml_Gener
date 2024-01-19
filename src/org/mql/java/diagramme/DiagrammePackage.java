@@ -59,7 +59,7 @@ public class DiagrammePackage {
 				}
 			}
 
-			handleRelations(document);
+			//handleRelations(document);
 
 			JScrollPane scrollPane = new JScrollPane(createDiagramPanel());
 			scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -95,7 +95,7 @@ public class DiagrammePackage {
 		classPanel.add(fieldsPanel);
 	}
 
-	private void handleRelations(Document document) {
+	/*private void handleRelations(Document document) {
 		NodeList relationNodes = document.getElementsByTagName("relations");
 
 		for (int i = 0; i < relationNodes.getLength(); i++) {
@@ -127,7 +127,7 @@ public class DiagrammePackage {
 		int y = panel.getY() + panel.getHeight() / 2;
 		return new Point(x, y);
 	}
-
+*/
 	private JPanel createDiagramPanel() {
 		JPanel diagramPanel = new JPanel();
 		diagramPanel.setLayout(new FlowLayout(200, 100, 200));
@@ -135,10 +135,10 @@ public class DiagrammePackage {
 		for (JPanel classPanel : packPanels.values()) {
 			diagramPanel.add(classPanel);
 		}
-
-		for (JPanel relationPanel : relationPanels.values()) {
-			diagramPanel.add(relationPanel);
-		}
+//
+//		for (JPanel relationPanel : relationPanels.values()) {
+//			diagramPanel.add(relationPanel);
+//		}
 
 		return diagramPanel;
 	}

@@ -14,6 +14,7 @@ import org.w3c.dom.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.Point;
 
 public class DiagrammeDOM extends JPanel {
@@ -26,7 +27,7 @@ public class DiagrammeDOM extends JPanel {
 
 	public DiagrammeDOM() {
 		classPanels = new HashMap<>();
-		diagramPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		diagramPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 	}
 
 	public JScrollPane parse(String source) {
@@ -168,29 +169,43 @@ public class DiagrammeDOM extends JPanel {
 	private void handleRelations(Document document) {
 		NodeList relationNodes = document.getElementsByTagName("relations");
 
-		for (JPanel classPanel : classPanels.values()) {
-			diagramPanel.add(classPanel);
-		}
-
 		for (int i = 0; i < relationNodes.getLength(); i++) {
-			Node relationNode = relationNodes.item(i);
-			if (relationNode.getNodeType() == Node.ELEMENT_NODE) {
-				Element relationElement = (Element) relationNode;
-				String fromClass = relationElement.getAttribute("depart");
-				String toClass = relationElement.getAttribute("arrive");
+			Element relationsElement = (Element) relationNodes.item(i);
+			NodeList relationList = relationsElement.getChildNodes();
 
-				JPanel fromPanel = classPanels.get(fromClass);
-				System.out.println("from"+fromClass+"to"+toClass);
-				JPanel toPanel = classPanels.get(toClass);
-				if (fromPanel != null && toPanel != null) {
-				    addRelationLine(fromPanel, toPanel, diagramPanel);
-				} else {
-				    // Gérer le cas où l'un des panneaux est null
-				    System.out.println("Panneau null. fromClass: " + fromClass + ", toClass: " + toClass);
+			for (int j = 0; j < relationList.getLength(); j++) {
+				Node relationNode = relationList.item(j);
+
+				if (relationNode.getNodeType() == Node.ELEMENT_NODE) {
+					Element relationElement = (Element) relationNode;
+					String relationType = relationElement.getNodeName();
+					String fromClass = relationElement.getAttribute("depart");
+					String toClass = relationElement.getAttribute("arrive");
+					System.out.println("_______________________________________________________");
+					System.out.println("Relation Type: " + relationType);
+					System.out.println("fromClass: " + fromClass);
+					System.out.println("toClass: " + toClass);
+
+					JPanel fromPanel = findPanelIgnoreCase(classPanels, fromClass);
+					JPanel toPanel = findPanelIgnoreCase(classPanels, toClass);
+
+					if (fromPanel != null && toPanel != null) {
+						addRelationLine(fromPanel, toPanel, diagramPanel);
+					} else {
+						System.out.println("Panneau null. fromClass: " + fromClass + ", toClass: " + toClass);
+					}
 				}
 			}
 		}
+	}
 
+	private JPanel findPanelIgnoreCase(Map<String, JPanel> classPanels, String className) {
+		for (Map.Entry<String, JPanel> entry : classPanels.entrySet()) {
+			if (entry.getKey().equalsIgnoreCase(className)) {
+				return entry.getValue();
+			}
+		}
+		return null;
 	}
 
 	// ajouter la ligne des relation au panneau du diagramme
@@ -209,6 +224,7 @@ public class DiagrammeDOM extends JPanel {
 	}
 
 	private JPanel createDiagramPanel() {
+		// diagramPanel.setLayout(new GridLayout(3, 0));
 
 		for (JPanel classPanel : classPanels.values()) {
 			diagramPanel.setLayout(new FlowLayout(50, 30, 30));
