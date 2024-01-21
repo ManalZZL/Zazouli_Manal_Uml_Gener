@@ -81,6 +81,7 @@ public class Examples {
 		JScrollPane scrollPane = diagrammeDOM.parse("C:\\Users\\th\\eclipse-workspace\\workM1\\Zazouli Manal - UmlDiagGener\\resources\\output.xml");
 
 		JFrame frame = new JFrame("Diagramme");
+		frame.setSize(400, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.add(scrollPane);
 		frame.pack();

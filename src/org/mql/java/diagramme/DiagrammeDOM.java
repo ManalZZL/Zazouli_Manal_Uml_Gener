@@ -14,7 +14,6 @@ import org.w3c.dom.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.awt.Point;
 
 public class DiagrammeDOM extends JPanel {
@@ -105,7 +104,7 @@ public class DiagrammeDOM extends JPanel {
 					classPanels.put(interfaceName, interfacePanel);
 				}
 			}
-			handleRelations(document);
+				//handleRelations(document);
 			JScrollPane scrollPane = new JScrollPane(createDiagramPanel());
 			scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 			scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -192,7 +191,7 @@ public class DiagrammeDOM extends JPanel {
 					if (fromPanel != null && toPanel != null) {
 						addRelationLine(fromPanel, toPanel, diagramPanel);
 					} else {
-						System.out.println("Panneau null. fromClass: " + fromClass + ", toClass: " + toClass);
+						System.out.println("Panneau null::: fromClass: " + fromClass + "--> toClass: " + toClass);
 					}
 				}
 			}
@@ -216,18 +215,17 @@ public class DiagrammeDOM extends JPanel {
 		diagp.add(relationLine);
 	}
 
-//retourner le centre de chaque panneau pour l'utiliser dans le dessin
+//retourner le centre de chaque panneau pour l'utiliser dans le dessin des relations
 	private Point getCenter(JPanel panel) {
-		int x = panel.getX() + panel.getWidth() / 2;
+		int x = panel.getX()+ panel.getWidth() / 2;
 		int y = panel.getY() + panel.getHeight() / 2;
 		return new Point(x, y);
 	}
 
 	private JPanel createDiagramPanel() {
-		// diagramPanel.setLayout(new GridLayout(3, 0));
 
 		for (JPanel classPanel : classPanels.values()) {
-			diagramPanel.setLayout(new FlowLayout(50, 30, 30));
+			diagramPanel.setLayout(new FlowLayout(50, 50, 30));
 			diagramPanel.add(classPanel);
 		}
 
