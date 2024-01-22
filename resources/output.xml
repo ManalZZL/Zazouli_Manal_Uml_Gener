@@ -3,6 +3,30 @@
 	<package>
 		<name>org.mql.java.animation</name>
 		<class>
+			<name>Examples</name>
+			<fields>
+				<field>
+					<fieldModifier>private</fieldModifier>
+					<fieldtype>JPanel</fieldtype>
+					<fieldName>screen</fieldName>
+				</field>
+			</fields>
+			<methods>
+				<method>
+					<methodtype>void</methodtype>
+					<methodName>main</methodName>
+				</method>
+				<method>
+					<methodtype>void</methodtype>
+					<methodName>exp01</methodName>
+				</method>
+				<method>
+					<methodtype>void</methodtype>
+					<methodName>userInterface</methodName>
+				</method>
+			</methods>
+		</class>
+		<class>
 			<name>Task</name>
 			<fields>
 				<field>
@@ -28,28 +52,47 @@
 			</relations>
 		</class>
 		<class>
-			<name>Examples</name>
+			<name>ScreenLinstner</name>
 			<fields>
 				<field>
 					<fieldModifier>private</fieldModifier>
-					<fieldtype>JPanel</fieldtype>
-					<fieldName>screen</fieldName>
+					<fieldtype>int</fieldtype>
+					<fieldName>counter</fieldName>
+				</field>
+				<field>
+					<fieldModifier>final</fieldModifier>
+					<fieldtype>Examples</fieldtype>
+					<fieldName>this$0</fieldName>
 				</field>
 			</fields>
 			<methods>
 				<method>
 					<methodtype>void</methodtype>
-					<methodName>main</methodName>
+					<methodName>mousePressed</methodName>
 				</method>
 				<method>
 					<methodtype>void</methodtype>
-					<methodName>exp01</methodName>
+					<methodName>mouseReleased</methodName>
 				</method>
 				<method>
 					<methodtype>void</methodtype>
-					<methodName>userInterface</methodName>
+					<methodName>mouseClicked</methodName>
+				</method>
+				<method>
+					<methodtype>void</methodtype>
+					<methodName>mouseExited</methodName>
+				</method>
+				<method>
+					<methodtype>void</methodtype>
+					<methodName>mouseEntered</methodName>
 				</method>
 			</methods>
+			<relations>
+				<composition arrive="Examples" depart="ScreenLinstner">Examples
+				</composition>
+				<implements arrive="MouseListener"
+					depart="ScreenLinstner">MouseListener</implements>
+			</relations>
 		</class>
 		<class>
 			<name>Pingouin</name>
@@ -137,11 +180,11 @@
 				</method>
 				<method>
 					<methodtype>void</methodtype>
-					<methodName>pause</methodName>
+					<methodName>goLeft</methodName>
 				</method>
 				<method>
 					<methodtype>void</methodtype>
-					<methodName>goLeft</methodName>
+					<methodName>pause</methodName>
 				</method>
 			</methods>
 			<relations>
@@ -153,49 +196,6 @@
 				<extends arrive="JPanel" depart="Pingouin">JPanel</extends>
 				<implements arrive="Runnable" depart="Pingouin">Runnable
 				</implements>
-			</relations>
-		</class>
-		<class>
-			<name>ScreenLinstner</name>
-			<fields>
-				<field>
-					<fieldModifier>private</fieldModifier>
-					<fieldtype>int</fieldtype>
-					<fieldName>counter</fieldName>
-				</field>
-				<field>
-					<fieldModifier>final</fieldModifier>
-					<fieldtype>Examples</fieldtype>
-					<fieldName>this$0</fieldName>
-				</field>
-			</fields>
-			<methods>
-				<method>
-					<methodtype>void</methodtype>
-					<methodName>mousePressed</methodName>
-				</method>
-				<method>
-					<methodtype>void</methodtype>
-					<methodName>mouseReleased</methodName>
-				</method>
-				<method>
-					<methodtype>void</methodtype>
-					<methodName>mouseClicked</methodName>
-				</method>
-				<method>
-					<methodtype>void</methodtype>
-					<methodName>mouseExited</methodName>
-				</method>
-				<method>
-					<methodtype>void</methodtype>
-					<methodName>mouseEntered</methodName>
-				</method>
-			</methods>
-			<relations>
-				<composition arrive="Examples" depart="ScreenLinstner">Examples
-				</composition>
-				<implements arrive="MouseListener"
-					depart="ScreenLinstner">MouseListener</implements>
 			</relations>
 		</class>
 	</package>
@@ -244,6 +244,16 @@
 			</relations>
 		</class>
 		<class>
+			<name>Processus</name>
+			<fields />
+			<methods>
+				<method>
+					<methodtype>void</methodtype>
+					<methodName>run</methodName>
+				</method>
+			</methods>
+		</class>
+		<class>
 			<name>Consumer</name>
 			<fields>
 				<field>
@@ -283,14 +293,45 @@
 			</methods>
 		</class>
 		<class>
-			<name>Processus</name>
+			<name>Examples</name>
 			<fields />
+			<methods>
+				<method>
+					<methodtype>void</methodtype>
+					<methodName>main</methodName>
+				</method>
+				<method>
+					<methodtype>void</methodtype>
+					<methodName>exp01</methodName>
+				</method>
+				<method>
+					<methodtype>void</methodtype>
+					<methodName>exp02</methodName>
+				</method>
+				<method>
+					<methodtype>void</methodtype>
+					<methodName>exp03</methodName>
+				</method>
+			</methods>
+		</class>
+		<class>
+			<name>InitWriter</name>
+			<fields>
+				<field>
+					<fieldModifier>private</fieldModifier>
+					<fieldtype>List</fieldtype>
+					<fieldName>sharedResource</fieldName>
+				</field>
+			</fields>
 			<methods>
 				<method>
 					<methodtype>void</methodtype>
 					<methodName>run</methodName>
 				</method>
 			</methods>
+			<relations>
+				<aggregation arrive="List" depart="InitWriter">List</aggregation>
+			</relations>
 		</class>
 		<class>
 			<name>Producer</name>
@@ -317,52 +358,43 @@
 				</composition>
 			</relations>
 		</class>
+	</package>
+	<package>
+		<name>org.mql.java.semaphores</name>
+		<interface>
+			<name>Logger</name>
+			<methods>
+				<methodtype>void</methodtype>
+				<methodName>log</methodName>
+			</methods>
+		</interface>
 		<class>
-			<name>InitWriter</name>
+			<name>FileLogger</name>
 			<fields>
 				<field>
 					<fieldModifier>private</fieldModifier>
+					<fieldtype>String</fieldtype>
+					<fieldName>source</fieldName>
+				</field>
+				<field>
+					<fieldModifier>private</fieldModifier>
 					<fieldtype>List</fieldtype>
-					<fieldName>sharedResource</fieldName>
+					<fieldName>messages</fieldName>
 				</field>
 			</fields>
 			<methods>
 				<method>
 					<methodtype>void</methodtype>
-					<methodName>run</methodName>
+					<methodName>log</methodName>
 				</method>
 			</methods>
 			<relations>
-				<aggregation arrive="List" depart="InitWriter">List</aggregation>
+				<aggregation arrive="List" depart="FileLogger">List</aggregation>
+				<implements arrive="Logger" depart="FileLogger">Logger</implements>
 			</relations>
 		</class>
 		<class>
-			<name>Examples</name>
-			<fields />
-			<methods>
-				<method>
-					<methodtype>void</methodtype>
-					<methodName>main</methodName>
-				</method>
-				<method>
-					<methodtype>void</methodtype>
-					<methodName>exp02</methodName>
-				</method>
-				<method>
-					<methodtype>void</methodtype>
-					<methodName>exp01</methodName>
-				</method>
-				<method>
-					<methodtype>void</methodtype>
-					<methodName>exp03</methodName>
-				</method>
-			</methods>
-		</class>
-	</package>
-	<package>
-		<name>org.mql.java.semaphores</name>
-		<class>
-			<name>PanelObserver</name>
+			<name>Producer</name>
 			<fields>
 				<field>
 					<fieldModifier>private</fieldModifier>
@@ -371,48 +403,40 @@
 				</field>
 				<field>
 					<fieldModifier>private</fieldModifier>
-					<fieldtype>int</fieldtype>
-					<fieldName>margin</fieldName>
+					<fieldtype>Semaphore</fieldtype>
+					<fieldName>m</fieldName>
 				</field>
 				<field>
 					<fieldModifier>private</fieldModifier>
-					<fieldtype>int</fieldtype>
-					<fieldName>size</fieldName>
+					<fieldtype>Semaphore</fieldtype>
+					<fieldName>empty</fieldName>
 				</field>
 				<field>
 					<fieldModifier>private</fieldModifier>
-					<fieldtype>int</fieldtype>
-					<fieldName>length</fieldName>
+					<fieldtype>Semaphore</fieldtype>
+					<fieldName>full</fieldName>
 				</field>
 			</fields>
 			<methods>
 				<method>
 					<methodtype>void</methodtype>
-					<methodName>update</methodName>
+					<methodName>run</methodName>
 				</method>
 				<method>
-					<methodtype>Dimension</methodtype>
-					<methodName>getPreferredSize</methodName>
-				</method>
-				<method>
-					<methodtype>void</methodtype>
-					<methodName>paintComponent</methodName>
+					<methodtype>String</methodtype>
+					<methodName>toString</methodName>
 				</method>
 			</methods>
 			<relations>
-				<composition arrive="Buffer" depart="PanelObserver">Buffer</composition>
-				<extends arrive="JPanel" depart="PanelObserver">JPanel</extends>
-				<implements arrive="Observer" depart="PanelObserver">Observer
-				</implements>
+				<composition arrive="Buffer" depart="Producer">Buffer</composition>
+				<composition arrive="Semaphore" depart="Producer">Semaphore
+				</composition>
+				<composition arrive="Semaphore" depart="Producer">Semaphore
+				</composition>
+				<composition arrive="Semaphore" depart="Producer">Semaphore
+				</composition>
 			</relations>
 		</class>
-		<interface>
-			<name>Logger</name>
-			<methods>
-				<methodtype>void</methodtype>
-				<methodName>log</methodName>
-			</methods>
-		</interface>
 		<class>
 			<name>Consumer</name>
 			<fields>
@@ -455,6 +479,128 @@
 				</composition>
 				<composition arrive="Semaphore" depart="Consumer">Semaphore
 				</composition>
+			</relations>
+		</class>
+		<interface>
+			<name>Observer</name>
+			<methods>
+				<methodtype>void</methodtype>
+				<methodName>update</methodName>
+			</methods>
+		</interface>
+		<class>
+			<name>ProducerConsumer</name>
+			<fields>
+				<field>
+					<fieldModifier>private</fieldModifier>
+					<fieldtype>Buffer</fieldtype>
+					<fieldName>buffer</fieldName>
+				</field>
+				<field>
+					<fieldModifier>private</fieldModifier>
+					<fieldtype>Producer[]</fieldtype>
+					<fieldName>producers</fieldName>
+				</field>
+				<field>
+					<fieldModifier>private</fieldModifier>
+					<fieldtype>Consumer[]</fieldtype>
+					<fieldName>consumers</fieldName>
+				</field>
+				<field>
+					<fieldModifier>private</fieldModifier>
+					<fieldtype>Semaphore</fieldtype>
+					<fieldName>m</fieldName>
+				</field>
+				<field>
+					<fieldModifier>private</fieldModifier>
+					<fieldtype>Semaphore</fieldtype>
+					<fieldName>empty</fieldName>
+				</field>
+				<field>
+					<fieldModifier>private</fieldModifier>
+					<fieldtype>Semaphore</fieldtype>
+					<fieldName>full</fieldName>
+				</field>
+				<field>
+					<fieldModifier>private</fieldModifier>
+					<fieldtype>PanelObserver</fieldtype>
+					<fieldName>obser</fieldName>
+				</field>
+			</fields>
+			<methods>
+				<method>
+					<methodtype>void</methodtype>
+					<methodName>main</methodName>
+				</method>
+				<method>
+					<methodtype>void</methodtype>
+					<methodName>init</methodName>
+				</method>
+				<method>
+					<methodtype>void</methodtype>
+					<methodName>userInterface</methodName>
+				</method>
+				<method>
+					<methodtype>void</methodtype>
+					<methodName>creatProducer</methodName>
+				</method>
+				<method>
+					<methodtype>void</methodtype>
+					<methodName>creatConsumer</methodName>
+				</method>
+			</methods>
+			<relations>
+				<composition arrive="Buffer" depart="ProducerConsumer">Buffer</composition>
+				<aggregation arrive="Producer[]"
+					depart="ProducerConsumer">Producer[]</aggregation>
+				<aggregation arrive="Consumer[]"
+					depart="ProducerConsumer">Consumer[]</aggregation>
+				<composition arrive="Semaphore"
+					depart="ProducerConsumer">Semaphore</composition>
+				<composition arrive="Semaphore"
+					depart="ProducerConsumer">Semaphore</composition>
+				<composition arrive="Semaphore"
+					depart="ProducerConsumer">Semaphore</composition>
+				<composition arrive="PanelObserver"
+					depart="ProducerConsumer">PanelObserver</composition>
+				<extends arrive="JFrame" depart="ProducerConsumer">JFrame</extends>
+			</relations>
+		</class>
+		<class>
+			<name>ThreadList</name>
+			<fields>
+				<field>
+					<fieldModifier>private</fieldModifier>
+					<fieldtype>String</fieldtype>
+					<fieldName>name</fieldName>
+				</field>
+				<field>
+					<fieldModifier>private</fieldModifier>
+					<fieldtype>LinkedList</fieldtype>
+					<fieldName>list</fieldName>
+				</field>
+			</fields>
+			<methods>
+				<method>
+					<methodtype>String</methodtype>
+					<methodName>getName</methodName>
+				</method>
+				<method>
+					<methodtype>void</methodtype>
+					<methodName>add</methodName>
+				</method>
+				<method>
+					<methodtype>void</methodtype>
+					<methodName>remove</methodName>
+				</method>
+				<method>
+					<methodtype>List</methodtype>
+					<methodName>getList</methodName>
+				</method>
+			</methods>
+			<relations>
+				<aggregation arrive="LinkedList" depart="ThreadList">LinkedList
+				</aggregation>
 			</relations>
 		</class>
 		<class>
@@ -529,44 +675,44 @@
 					<methodName>read</methodName>
 				</method>
 				<method>
-					<methodtype>int</methodtype>
-					<methodName>getReadHead</methodName>
-				</method>
-				<method>
-					<methodtype>Thread</methodtype>
-					<methodName>getCurrentProducer</methodName>
-				</method>
-				<method>
-					<methodtype>int</methodtype>
-					<methodName>getWriteHead</methodName>
-				</method>
-				<method>
-					<methodtype>Thread</methodtype>
-					<methodName>getCurrentConsumer</methodName>
-				</method>
-				<method>
-					<methodtype>Object</methodtype>
-					<methodName>getElement</methodName>
-				</method>
-				<method>
-					<methodtype>void</methodtype>
-					<methodName>notifyObservers</methodName>
-				</method>
-				<method>
 					<methodtype>Object[]</methodtype>
 					<methodName>getData</methodName>
 				</method>
 				<method>
-					<methodtype>void</methodtype>
-					<methodName>setLogger</methodName>
+					<methodtype>int</methodtype>
+					<methodName>getCurretwritePosition</methodName>
 				</method>
 				<method>
 					<methodtype>int</methodtype>
 					<methodName>getCurrentreadPosition</methodName>
 				</method>
 				<method>
+					<methodtype>Object</methodtype>
+					<methodName>getElement</methodName>
+				</method>
+				<method>
 					<methodtype>int</methodtype>
-					<methodName>getCurretwritePosition</methodName>
+					<methodName>getWriteHead</methodName>
+				</method>
+				<method>
+					<methodtype>void</methodtype>
+					<methodName>setLogger</methodName>
+				</method>
+				<method>
+					<methodtype>Thread</methodtype>
+					<methodName>getCurrentProducer</methodName>
+				</method>
+				<method>
+					<methodtype>Thread</methodtype>
+					<methodName>getCurrentConsumer</methodName>
+				</method>
+				<method>
+					<methodtype>int</methodtype>
+					<methodName>getReadHead</methodName>
+				</method>
+				<method>
+					<methodtype>void</methodtype>
+					<methodName>notifyObservers</methodName>
 				</method>
 			</methods>
 			<relations>
@@ -599,40 +745,8 @@
 				</implements>
 			</relations>
 		</class>
-		<interface>
-			<name>Observer</name>
-			<methods>
-				<methodtype>void</methodtype>
-				<methodName>update</methodName>
-			</methods>
-		</interface>
 		<class>
-			<name>FileLogger</name>
-			<fields>
-				<field>
-					<fieldModifier>private</fieldModifier>
-					<fieldtype>String</fieldtype>
-					<fieldName>source</fieldName>
-				</field>
-				<field>
-					<fieldModifier>private</fieldModifier>
-					<fieldtype>List</fieldtype>
-					<fieldName>messages</fieldName>
-				</field>
-			</fields>
-			<methods>
-				<method>
-					<methodtype>void</methodtype>
-					<methodName>log</methodName>
-				</method>
-			</methods>
-			<relations>
-				<aggregation arrive="List" depart="FileLogger">List</aggregation>
-				<implements arrive="Logger" depart="FileLogger">Logger</implements>
-			</relations>
-		</class>
-		<class>
-			<name>ProducerConsumer</name>
+			<name>PanelObserver</name>
 			<fields>
 				<field>
 					<fieldModifier>private</fieldModifier>
@@ -641,72 +755,39 @@
 				</field>
 				<field>
 					<fieldModifier>private</fieldModifier>
-					<fieldtype>Producer[]</fieldtype>
-					<fieldName>producers</fieldName>
+					<fieldtype>int</fieldtype>
+					<fieldName>margin</fieldName>
 				</field>
 				<field>
 					<fieldModifier>private</fieldModifier>
-					<fieldtype>Consumer[]</fieldtype>
-					<fieldName>consumers</fieldName>
+					<fieldtype>int</fieldtype>
+					<fieldName>size</fieldName>
 				</field>
 				<field>
 					<fieldModifier>private</fieldModifier>
-					<fieldtype>Semaphore</fieldtype>
-					<fieldName>m</fieldName>
-				</field>
-				<field>
-					<fieldModifier>private</fieldModifier>
-					<fieldtype>Semaphore</fieldtype>
-					<fieldName>empty</fieldName>
-				</field>
-				<field>
-					<fieldModifier>private</fieldModifier>
-					<fieldtype>Semaphore</fieldtype>
-					<fieldName>full</fieldName>
-				</field>
-				<field>
-					<fieldModifier>private</fieldModifier>
-					<fieldtype>PanelObserver</fieldtype>
-					<fieldName>obser</fieldName>
+					<fieldtype>int</fieldtype>
+					<fieldName>length</fieldName>
 				</field>
 			</fields>
 			<methods>
 				<method>
 					<methodtype>void</methodtype>
-					<methodName>main</methodName>
+					<methodName>update</methodName>
 				</method>
 				<method>
 					<methodtype>void</methodtype>
-					<methodName>init</methodName>
+					<methodName>paintComponent</methodName>
 				</method>
 				<method>
-					<methodtype>void</methodtype>
-					<methodName>userInterface</methodName>
-				</method>
-				<method>
-					<methodtype>void</methodtype>
-					<methodName>creatConsumer</methodName>
-				</method>
-				<method>
-					<methodtype>void</methodtype>
-					<methodName>creatProducer</methodName>
+					<methodtype>Dimension</methodtype>
+					<methodName>getPreferredSize</methodName>
 				</method>
 			</methods>
 			<relations>
-				<composition arrive="Buffer" depart="ProducerConsumer">Buffer</composition>
-				<aggregation arrive="Producer[]"
-					depart="ProducerConsumer">Producer[]</aggregation>
-				<aggregation arrive="Consumer[]"
-					depart="ProducerConsumer">Consumer[]</aggregation>
-				<composition arrive="Semaphore"
-					depart="ProducerConsumer">Semaphore</composition>
-				<composition arrive="Semaphore"
-					depart="ProducerConsumer">Semaphore</composition>
-				<composition arrive="Semaphore"
-					depart="ProducerConsumer">Semaphore</composition>
-				<composition arrive="PanelObserver"
-					depart="ProducerConsumer">PanelObserver</composition>
-				<extends arrive="JFrame" depart="ProducerConsumer">JFrame</extends>
+				<composition arrive="Buffer" depart="PanelObserver">Buffer</composition>
+				<extends arrive="JPanel" depart="PanelObserver">JPanel</extends>
+				<implements arrive="Observer" depart="PanelObserver">Observer
+				</implements>
 			</relations>
 		</class>
 		<class>
@@ -720,87 +801,6 @@
 			</methods>
 			<relations>
 				<implements arrive="Logger" depart="CosoleLogger">Logger</implements>
-			</relations>
-		</class>
-		<class>
-			<name>Producer</name>
-			<fields>
-				<field>
-					<fieldModifier>private</fieldModifier>
-					<fieldtype>Buffer</fieldtype>
-					<fieldName>buffer</fieldName>
-				</field>
-				<field>
-					<fieldModifier>private</fieldModifier>
-					<fieldtype>Semaphore</fieldtype>
-					<fieldName>m</fieldName>
-				</field>
-				<field>
-					<fieldModifier>private</fieldModifier>
-					<fieldtype>Semaphore</fieldtype>
-					<fieldName>empty</fieldName>
-				</field>
-				<field>
-					<fieldModifier>private</fieldModifier>
-					<fieldtype>Semaphore</fieldtype>
-					<fieldName>full</fieldName>
-				</field>
-			</fields>
-			<methods>
-				<method>
-					<methodtype>void</methodtype>
-					<methodName>run</methodName>
-				</method>
-				<method>
-					<methodtype>String</methodtype>
-					<methodName>toString</methodName>
-				</method>
-			</methods>
-			<relations>
-				<composition arrive="Buffer" depart="Producer">Buffer</composition>
-				<composition arrive="Semaphore" depart="Producer">Semaphore
-				</composition>
-				<composition arrive="Semaphore" depart="Producer">Semaphore
-				</composition>
-				<composition arrive="Semaphore" depart="Producer">Semaphore
-				</composition>
-			</relations>
-		</class>
-		<class>
-			<name>ThreadList</name>
-			<fields>
-				<field>
-					<fieldModifier>private</fieldModifier>
-					<fieldtype>String</fieldtype>
-					<fieldName>name</fieldName>
-				</field>
-				<field>
-					<fieldModifier>private</fieldModifier>
-					<fieldtype>LinkedList</fieldtype>
-					<fieldName>list</fieldName>
-				</field>
-			</fields>
-			<methods>
-				<method>
-					<methodtype>String</methodtype>
-					<methodName>getName</methodName>
-				</method>
-				<method>
-					<methodtype>void</methodtype>
-					<methodName>add</methodName>
-				</method>
-				<method>
-					<methodtype>void</methodtype>
-					<methodName>remove</methodName>
-				</method>
-				<method>
-					<methodtype>List</methodtype>
-					<methodName>getList</methodName>
-				</method>
-			</methods>
-			<relations>
-				<aggregation arrive="LinkedList" depart="ThreadList">LinkedList
-				</aggregation>
 			</relations>
 		</class>
 		<class>
@@ -846,15 +846,15 @@
 				</method>
 				<method>
 					<methodtype>void</methodtype>
+					<methodName>setLogger</methodName>
+				</method>
+				<method>
+					<methodtype>void</methodtype>
 					<methodName>waitDijkstra</methodName>
 				</method>
 				<method>
 					<methodtype>void</methodtype>
 					<methodName>signalDijkstra</methodName>
-				</method>
-				<method>
-					<methodtype>void</methodtype>
-					<methodName>setLogger</methodName>
 				</method>
 			</methods>
 			<relations>

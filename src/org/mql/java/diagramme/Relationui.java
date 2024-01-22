@@ -16,10 +16,7 @@ public class Relationui extends JPanel {
         this.startY = startY;
         this.endX = endX;
         this.endY = endY;
-        
-//        int maxX = Math.max(startX, endX);
-//        int maxY = Math.max(startY, endY);
-//        setPreferredSize(new Dimension(maxX + 10, maxY + 10)); 
+
     }
 
     @Override

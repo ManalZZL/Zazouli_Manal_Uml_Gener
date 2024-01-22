@@ -2,15 +2,14 @@ package org.mql.java;
 
 import java.util.List;
 
+
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 
-import org.mql.java.diagramme.DiagrammeDOM;
+import org.mql.java.diagramme.DiagrammeApp;
+import org.mql.java.diagramme.DiagrammeClasse;
 import org.mql.java.diagramme.DiagrammePackage;
-import org.mql.java.diagramme.Relationui;
 import org.mql.java.models.PackageModel;
-import org.mql.java.reflect.ClasseExplore;
-import org.mql.java.reflect.PackageExplore;
 import org.mql.java.reflect.ProjetExplore;
 import org.mql.java.xml.XMLGenerator;
 import org.mql.java.xml.XMLParser;
@@ -18,21 +17,22 @@ import org.mql.java.xml.XMLParser;
 public class Examples {
 
 	public Examples() {
-		exp02();
+	     lesDiagrammes();
 	}
 
 	void exp01() {
 		try {
 
 			ProjetExplore prj = new ProjetExplore("C:\\Users\\th\\eclipse-workspace\\workM1\\p05-Multithreading\\bin");
-			PackageExplore pck = new PackageExplore(prj, "org.mql.java.generic");
-			ClasseExplore cls = new ClasseExplore(prj);
 			XMLGenerator.generateXML(prj.getPack(), prj.extractRelations(),
 					"C:\\Users\\th\\eclipse-workspace\\workM1\\Zazouli Manal - UmlDiagGener\\resources\\output.xml");
 			List<PackageModel> dataModel = XMLParser.parseXML(
 					"C:\\Users\\th\\eclipse-workspace\\workM1\\Zazouli Manal - UmlDiagGener\\resources\\output.xml");
 			XMLParser.displayModel(dataModel);
 
+			
+//			PackageExplore pck = new PackageExplore(prj, "org.mql.java.generic");
+//			ClasseExplore cls = new ClasseExplore(prj);
 //			 System.out.println( prj.extractRelations());
 //
 //			System.out.println("**********************");
@@ -71,16 +71,26 @@ public class Examples {
 			e.printStackTrace();
 		}
 	}
+void diagrammeDeClasse() {
+	DiagrammeClasse diagramme = new DiagrammeClasse();
 
-	void exp02() {
+	JScrollPane scrollPane = diagramme.parse("C:\\Users\\th\\eclipse-workspace\\workM1\\Zazouli Manal - UmlDiagGener\\resources\\output.xml");
 
-		DiagrammeDOM diagrammeDOM = new DiagrammeDOM();
+	JFrame frame = new JFrame("Diagramme de classe");
+	frame.setSize(400, 300);
+	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	frame.add(scrollPane);
+	frame.pack();
+	frame.setLocationRelativeTo(null);
+	frame.setVisible(true);
+
+}
+	void diagrammeDePackage() {
+
 		DiagrammePackage pc = new DiagrammePackage();
-		//JScrollPane scrollPane = pc.parse("C:\\Users\\th\\eclipse-workspace\\workM1\\Zazouli Manal - UmlDiagGener\\resources\\output.xml");
+		JScrollPane scrollPane = pc.parse("C:\\Users\\th\\eclipse-workspace\\workM1\\Zazouli Manal - UmlDiagGener\\resources\\output.xml");
 
-		JScrollPane scrollPane = diagrammeDOM.parse("C:\\Users\\th\\eclipse-workspace\\workM1\\Zazouli Manal - UmlDiagGener\\resources\\output.xml");
-
-		JFrame frame = new JFrame("Diagramme");
+		JFrame frame = new JFrame("Diagramme de package");
 		frame.setSize(400, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.add(scrollPane);
@@ -90,16 +100,8 @@ public class Examples {
 
 	}
 
-	void exp03() {
-		int h = 600;
-		int w = 800;
-		JFrame f = new JFrame();
-		Relationui dc = new Relationui(100, 123, 123, 111);
-		f.setSize(w, h);
-		f.setTitle("drawing");
-		f.add(dc);
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setVisible(true);
+	void lesDiagrammes() {
+		DiagrammeApp dg = new DiagrammeApp();
 	}
 
 	public static void main(String[] args) {

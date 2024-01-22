@@ -16,7 +16,7 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Point;
 
-public class DiagrammeDOM extends JPanel {
+public class DiagrammeClasse extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
@@ -24,7 +24,7 @@ public class DiagrammeDOM extends JPanel {
 
 	JPanel diagramPanel;
 
-	public DiagrammeDOM() {
+	public DiagrammeClasse() {
 		classPanels = new HashMap<>();
 		diagramPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 	}
@@ -104,7 +104,7 @@ public class DiagrammeDOM extends JPanel {
 					classPanels.put(interfaceName, interfacePanel);
 				}
 			}
-				//handleRelations(document);
+			// handleRelations(document);// marche pas correctement
 			JScrollPane scrollPane = new JScrollPane(createDiagramPanel());
 			scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 			scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -125,9 +125,18 @@ public class DiagrammeDOM extends JPanel {
 
 		for (int i = 0; i < fieldNodes.getLength(); i++) {
 			Element fieldElement = (Element) fieldNodes.item(i);
-			String fieldType = "-" + fieldElement.getElementsByTagName("fieldtype").item(0).getTextContent();
-			String fieldName = fieldElement.getElementsByTagName("fieldName").item(0).getTextContent();
+			String fieldModifier = fieldElement.getElementsByTagName("fieldModifier").item(0).getTextContent();
+			String fieldType = "~ " + fieldElement.getElementsByTagName("fieldtype").item(0).getTextContent();
+			;
+			if (fieldModifier.equals("private")) {
+				fieldType = "- " + fieldElement.getElementsByTagName("fieldtype").item(0).getTextContent();
+			} else if (fieldModifier.equals("public")) {
+				fieldType = "+ " + fieldElement.getElementsByTagName("fieldtype").item(0).getTextContent();
+			} else if (fieldModifier.equals("protected")) {
+				fieldType = "# " + fieldElement.getElementsByTagName("fieldtype").item(0).getTextContent();
+			}
 
+			String fieldName = fieldElement.getElementsByTagName("fieldName").item(0).getTextContent();
 			LabelTextField fieldLabel = new LabelTextField(fieldType);
 			LabelTextField nameLabel = new LabelTextField(fieldName, "pour :");
 			JPanel fieldPanel = new JPanel(new BorderLayout());
@@ -217,7 +226,7 @@ public class DiagrammeDOM extends JPanel {
 
 //retourner le centre de chaque panneau pour l'utiliser dans le dessin des relations
 	private Point getCenter(JPanel panel) {
-		int x = panel.getX()+ panel.getWidth() / 2;
+		int x = panel.getX() + panel.getWidth() / 2;
 		int y = panel.getY() + panel.getHeight() / 2;
 		return new Point(x, y);
 	}

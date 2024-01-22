@@ -10,17 +10,7 @@ import javax.swing.JTextField;
 public class LabelTextField extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-
-	public LabelTextField(String label, int size) {
-		setLayout(new FlowLayout(FlowLayout.LEFT));
-		if (!label.contains(":")) {
-			label += ":";
-			JLabel l1 = new JLabel(label);
-			JTextField t1 = new JTextField(size);
-			add(l1);
-			add(t1);
-		}
-	}
+	JTextField t1;
 
 	public LabelTextField(String label, int size, int labelSize) {
 		this(label, size);
@@ -42,6 +32,21 @@ public class LabelTextField extends JPanel {
 		setLayout(new FlowLayout(FlowLayout.LEFT));
 		JLabel l1 = new JLabel(label);
 		add(l1);
+
+	}
+	public LabelTextField(String label, int size) {
+
+		if (!label.endsWith(":")) {
+			label += ":";
+		}
+		JLabel l1 = new JLabel(label);
+		t1 = new JTextField(size);
+		add(l1);
+		add(t1);
+	}
+
+	public String gettext() {
+		return t1.getText();
 
 	}
 }
