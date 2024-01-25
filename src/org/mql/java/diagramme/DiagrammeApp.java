@@ -19,11 +19,11 @@ public class DiagrammeApp extends JFrame {
 	    public DiagrammeApp() {
 	        buttonDeTest = new Button();
 	        MenuDiagramme pc = new MenuDiagramme();
-            directions = new LabelTextField("vous devez réinitialiser le document xml pour avoir les diagrammes de votre projet choisi correctement","for :");
+            directions = new LabelTextField("vous devez clicker sur le button apres avoir donner le chemin de votre projet pour dessiner les diagrammes de votre projet personnel","for :");
             directions.setBackground(Color.orange);
             setLayout(new BorderLayout());
 	        setSize(800, 200);
-	        setTitle("Application des diagrammes");
+	        setTitle("Application des diagrammes UML");
 
 	        add(pc, BorderLayout.NORTH);
 
